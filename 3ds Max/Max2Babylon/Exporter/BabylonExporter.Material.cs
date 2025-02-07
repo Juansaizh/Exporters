@@ -560,6 +560,10 @@ namespace Max2Babylon
         {
             var propertyContainer = materialNode.IPropertyContainer;
 
+            // Variables to export a full PBR material with custom attributes
+            PbrGameMaterialDecorator maxDecorator = new PbrGameMaterialDecorator(materialNode);
+            BabylonCustomAttributeDecorator babylonDecorator = maxDecorator.BabylonCustomAttributes;
+
             bool isTransparencyModeFromBabylonAttributes = false;
             bool usePbrFactor = false; // this force the exporter to set the metallic or roughness even if the map are set
             if (attributesContainer != null)
@@ -799,7 +803,24 @@ namespace Max2Babylon
             // Export the custom attributes of this material
             babylonMaterial.metadata = ExportExtraAttributes(materialNode, babylonScene, excludeAttributes);
 
-            babylonScene.MaterialsList.Add(babylonMaterial);
+            // When pbrFull checkbox is checked, export a full PBR material with the extra attributes
+            if (exportParameters.pbrFull)
+            {
+                var fullPBR = new BabylonPBRMaterial(babylonMaterial)
+                {
+                    directIntensity = babylonDecorator.DirectIntensity,
+                    emissiveIntensity = babylonDecorator.EmissiveIntensity,
+                    environmentIntensity = babylonDecorator.EnvironementIntensity,
+                    specularIntensity = babylonDecorator.SpecularIntensity,
+                    maxGameMaterial = babylonMaterial.maxGameMaterial
+                };
+                fullPBR.metadata = ExportExtraAttributes(materialNode, babylonScene, excludeAttributes);
+                babylonScene.MaterialsList.Add(fullPBR);
+            }
+            else
+            {
+                babylonScene.MaterialsList.Add(babylonMaterial);
+            }
         }
 
         private void ExportArnoldMaterial(IIGameMaterial materialNode, IIPropertyContainer attributesContainer, BabylonScene babylonScene, BabylonPBRMetallicRoughnessMaterial babylonMaterial)
