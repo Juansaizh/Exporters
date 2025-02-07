@@ -33,7 +33,7 @@ namespace Max2Babylon
 
         public IIPropertyContainer Properties => _node.IPropertyContainer;
         public string Id => _node.MaxMaterial.GetGuid().ToString();
-        public string Name => _node.MaterialName; 
+        public string Name => _node.MaterialName;
         public IIGameMaterial Node => _node;
 
         protected ITexmap _getTexMapWithCache(IIGameMaterial materialNode, string name)
@@ -85,7 +85,7 @@ namespace Max2Babylon
                 {
 #if MAX2024 || MAX2025 || MAX2026
                     // 3dsMax2024+ introduced new localized flag
-                    var slotName = materialNode.MaxMaterial.GetSubTexmapSlotName(i, false);   
+                    var slotName = materialNode.MaxMaterial.GetSubTexmapSlotName(i, false);
 #else
                     var slotName = materialNode.MaxMaterial.GetSubTexmapSlotName(i);
 #endif
@@ -183,7 +183,7 @@ namespace Max2Babylon
             RaiseMessage(name, 1);
 
             // --- prints ---
-#region prints
+            #region prints
             {
                 RaiseVerbose("materialNode.MaterialClass=" + materialNode.MaterialClass, 2);
                 RaiseVerbose("materialNode.NumberOfTextureMaps=" + materialNode.NumberOfTextureMaps, 2);
@@ -199,7 +199,7 @@ namespace Max2Babylon
 #endif
                 }
             }
-#endregion
+            #endregion
 
             if (materialNode.SubMaterialCount > 0)
             {
@@ -243,7 +243,7 @@ namespace Max2Babylon
             // Retreive Attributes container
             IIPropertyContainer attributesContainer = materialNode.IPropertyContainer;
 
-            bool isUnlit = attributesContainer?.GetBoolProperty("babylonUnlit", false)??false;
+            bool isUnlit = attributesContainer?.GetBoolProperty("babylonUnlit", false) ?? false;
 
             // check custom exporters first, to allow custom exporters of supported material classes
             materialExporters.TryGetValue(new ClassIDWrapper(materialNode.MaxMaterial.ClassID), out IMaxMaterialExporter materialExporter);
@@ -729,7 +729,7 @@ namespace Max2Babylon
                     if (babylonMaterial.metallicRoughnessTexture != null && !usePbrFactor)
                     {
                         // Change the factor to zero if combining partial channel to avoid issue (in case of image compression).
-                        // ie - if no metallic map, then b MUSt be fully black. However channel of jpeg MAY not beeing fully black 
+                        // ie - if no metallic map, then b MUSt be fully black. However channel of jpeg MAY not beeing fully black
                         // cause of the compression algorithm. Keeping MetallicFactor to 1 will make visible artifact onto texture. So set to Zero instead.
                         babylonMaterial.metallic = areTexturesAlreadyMerged || metallicTexmap != null || babylonMaterial.metallic != 0 ? 1.0f : 0.0f;
                         babylonMaterial.roughness = areTexturesAlreadyMerged || roughnessTexmap != null || babylonMaterial.roughness != 0 ? 1.0f : 0.0f;
@@ -974,7 +974,7 @@ namespace Max2Babylon
                         // 3dsMax2024+ introduced new localized flag
                         if (materialNode.MaxMaterial.GetSubTexmapSlotName(i,false) == "normal")
 #else
-                        if(materialNode.MaxMaterial.GetSubTexmapSlotName(i) == "normal")
+                        if (materialNode.MaxMaterial.GetSubTexmapSlotName(i) == "normal")
 #endif
 
                         {
@@ -995,7 +995,7 @@ namespace Max2Babylon
                     if (babylonMaterial.metallicRoughnessTexture != null)
                     {
                         // Change the factor to zero if combining partial channel to avoid issue (in case of image compression).
-                        // ie - if no metallic map, then b MUSt be fully black. However channel of jpeg MAY not beeing fully black 
+                        // ie - if no metallic map, then b MUSt be fully black. However channel of jpeg MAY not beeing fully black
                         // cause of the compression algorithm. Keeping MetallicFactor to 1 will make visible artifact onto texture. So set to Zero instead.
                         babylonMaterial.metallic = areTexturesAlreadyMerged || metallicTexmap != null || babylonMaterial.metallic != 0 ? 1.0f : 0.0f;
                         babylonMaterial.roughness = areTexturesAlreadyMerged || roughnessTexmap != null || babylonMaterial.roughness != 0 ? 1.0f : 0.0f;
@@ -1275,7 +1275,7 @@ namespace Max2Babylon
         private void ExportCommonBabylonAttributes(IIPropertyContainer babylonAttributesContainer, BabylonMaterial babylonMaterial)
         {
             int maxSimultaneousLights = babylonAttributesContainer.GetIntProperty("babylonMaxSimultaneousLights", 4);
-            maxSimultaneousLights = Math.Min(100,Math.Max(maxSimultaneousLights,1));// force to be [1,100], because of 3DSMax Slider issue.
+            maxSimultaneousLights = Math.Min(100, Math.Max(maxSimultaneousLights, 1));// force to be [1,100], because of 3DSMax Slider issue.
             RaiseVerbose($"maxSimultaneousLights={maxSimultaneousLights}", 3);
             babylonMaterial.maxSimultaneousLights = maxSimultaneousLights;
 
